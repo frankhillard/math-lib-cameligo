@@ -1,7 +1,7 @@
 {
   "name": "@ligo/math-lib",
-  "version": "1.1.1",
-  "description": "A math library for LIGO with support for Float & Rational numbers",
+  "version": "1.1.2",
+  "description": "A math library for LIGO with support for Float & Rational numbers & extra functions",
   "directories": {
     "test": "test"
   },

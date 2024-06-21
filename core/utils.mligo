@@ -8,9 +8,40 @@ module Address = struct
     //let size : nat = Bytes.length pack_elt in
     //let addr_bin : bytes = Bytes.sub 7n (abs(size - 7n)) pack_elt in
     //let value : nat = bytes_to_nat(addr_bin) in
-    //let () = Test.log(value) in
+    //let () = Test.Next.IO.log(value) in
 
     (is_imp = 0x00)
+
+end
+
+module Entrypoint = struct
+  (** Retrieves the entrypoint name from a given entrypoint ('a contract). The returned entrypoint name is prefixed with "%" *)  
+  let get_entrypoint_name (type a) (ep : a contract) : string =
+    let pad4 (seq: bytes) : bytes =
+      let rec padding (bts: bytes) (current_size: nat) (expected_size: nat) : bytes = 
+        if current_size = expected_size then
+          bts
+        else
+          padding (Bytes.concat 0x00 bts) (current_size + 1n) expected_size
+      in
+      let current_size = Bytes.length seq in
+      let () = Assert.Error.assert(current_size <= 4n) "[@ligo/math-lib/core/utils] Error in Entrypoint.get_entrypoint_name (name too long)" in
+      padding seq current_size 4n
+    in
+    let pack_ep : bytes = Bytes.pack ep in
+    let size = Bytes.length pack_ep in
+    let () = Assert.Error.assert(size > 28n) "[@ligo/math-lib/core/utils] Error in Entrypoint.get_entrypoint_name (bytes representation too short)" in
+    let nb_to_read = abs(size - 28n) in 
+    let name_bytes : bytes = Bytes.sub 28n nb_to_read pack_ep in      
+    let nb_to_read_bytes = bytes nb_to_read in
+    let nb_to_read_4bytes = pad4 nb_to_read_bytes in
+    // Add prefix for string 
+    let full_name_bytes = Bytes.concat 0x0501 (Bytes.concat nb_to_read_4bytes name_bytes) in      
+    let name : string = match Bytes.unpack full_name_bytes with
+    | None -> failwith "[@ligo/math-lib/core/utils] Error in Entrypoint.get_entrypoint_name"
+    | Some n -> n
+    in 
+    String.concat "%" name
 
 end
 
@@ -59,7 +90,7 @@ module Bytes = struct
     [@private]
     let byte_to_nat (hexa : bytes) : nat =
       let _check_size : unit =
-        assert_with_error (Bytes.length hexa = 1n) "Can only convert 1 byte" in
+        Assert.Error.assert (Bytes.length hexa = 1n) "Can only convert 1 byte" in
       if hexa = 0x00
       then 0n
       else

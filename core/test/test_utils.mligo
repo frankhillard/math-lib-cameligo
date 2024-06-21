@@ -4,12 +4,12 @@ let test =
     //0x050a00000016 00 00430d6ec166d9c623104776aaad3bb50615c6791f
     // let is_implicit(elt: address) : bool = 
     //     let pack_elt : bytes = Bytes.pack elt in
-    //     let () = Test.log((elt, pack_elt)) in
+    //     let () = Test.Next.IO.log((elt, pack_elt)) in
     //     let size : nat = Bytes.length pack_elt in
     //     let is_imp : bytes = Bytes.sub 6n 1n pack_elt in
     //     let addr_bin : bytes = Bytes.sub 7n (abs(size - 7n)) pack_elt in
     //     let value : nat = Utils.Bytes.bytes_to_nat(addr_bin) in
-    //     let () = Test.log(value) in
+    //     let () = Test.Next.IO.log(value) in
     //     ( is_imp = 0x00 )
     // in
     // TEST
@@ -68,7 +68,7 @@ let test =
       let run_test (elt : (address * bool)) : unit =
         let calculated : bool = f (elt.0) in
         let expected : bool = elt.1 in
-        assert (calculated = expected) in
+        Assert.assert (calculated = expected) in
       List.iter run_test all_tests in
     // for KT1... is_implicit() should answer false
 
@@ -80,7 +80,7 @@ let test =
     // Run tests
 
     let () = run_tests all_tests Utils.Address.is_implicit in
-    Test.log ("Test finished") in
+    Test.Next.IO.log ("Test finished") in
   let _test_bytes_is_adddress =
     (* chest key/payload and time matches -> OK *)
 
@@ -91,7 +91,7 @@ let test =
     let () =
       match value with
         None -> failwith ("a boolean true was expected")
-      | Some b -> assert (b = true) in
+      | Some b -> Assert.assert (b = true) in
     let payload : bytes =
       0x050a0000001601f4186c23ee65145a1038193686882c29a1f2009e00 in
     let value : bool option =
@@ -99,45 +99,45 @@ let test =
     let () =
       match value with
         None -> failwith ("a boolean false was expected")
-      | Some b -> assert (b = false) in
+      | Some b -> Assert.assert (b = false) in
     let payload : bytes =
       0x07020000001601f4186c23ee65145a1038193686882c29a1f2009e00 in
     let value : bool option =
       Utils.Bytes.Packed.is_internal_address_implicit (payload) in
     let () =
       match value with
-        None -> assert (true)
+        None -> Assert.assert (true)
       | Some _ -> failwith ("a None was expected") in
-    Test.log ("Test finished") in
+    Test.Next.IO.log ("Test finished") in
   let _test_convert_bytes_to_nat =
     (* chest key/payload and time matches -> OK *)
 
     let payload : bytes = 0x00 in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 0n) in
+    let () = Assert.assert (value = 0n) in
     let payload : bytes = 0x0a in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 10n) in
+    let () = Assert.assert (value = 10n) in
     let payload : bytes = 0x0A in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 10n) in
+    let () = Assert.assert (value = 10n) in
     let payload : bytes = 0x2c in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 44n) in
+    let () = Assert.assert (value = 44n) in
     let payload : bytes = 0x2C in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 44n) in
+    let () = Assert.assert (value = 44n) in
     let payload : bytes = 0xFF in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 255n) in
+    let () = Assert.assert (value = 255n) in
     let payload : bytes = 0x1234 in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 4660n) in
+    let () = Assert.assert (value = 4660n) in
     let payload : bytes = 0x001234 in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 4660n) in
+    let () = Assert.assert (value = 4660n) in
     let payload : bytes = 0x123400 in
     let value : nat = Utils.Bytes.Conversion.bytes_to_nat (payload) in
-    let () = assert (value = 4660n * 256n) in
-    Test.log ("Test 'rational' finished") in
+    let () = Assert.assert (value = 4660n * 256n) in
+    Test.Next.IO.log ("Test 'rational' finished") in
   ()

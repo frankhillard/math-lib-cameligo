@@ -178,15 +178,15 @@ let sin (a, n : Rational.t * nat) : Rational.t =
         failwith
           ("chebychev_lookup_intervals does not match chebychev_lookup_table")
     | Some coef -> coef in
-  let coef_0 = Option.unopt (List.head_opt coef) in
-  let coef_1 = Option.unopt (List.head_opt (Option.unopt (List.tail_opt coef))) in
+  let coef_0 = Option.value_with_error "Missing chebychev coef 0" (List.head coef) in
+  let coef_from_1 = Option.value_with_error "Missing chebychev coef 1" (List.tail coef) in
+  let coef_1 = Option.value_with_error "Missing chebychev coef 1" (List.head coef_from_1) in
   let y0 = Rational.add coef_0 (Rational.mul coef_1 u) in
   let one = Rational.new 1 in
   let two = Rational.new 2 in
   let t0 : Rational.t = one in
   let t1 : Rational.t = u in
-  let coef_from_2 =
-    Option.unopt (List.tail_opt (Option.unopt (List.tail_opt coef))) in
+  let coef_from_2 = Option.value_with_error "Missing chebychev coef 2" (List.tail coef_from_1) in
   let rec compute
     (i, acc, t_prev, t_prev_prev, n, coef
      : nat * Rational.t * Rational.t * Rational.t * nat * chebychev_coef)
@@ -195,8 +195,8 @@ let sin (a, n : Rational.t * nat) : Rational.t =
     then
       let t_next_u =
         Rational.sub (Rational.mul (Rational.mul two u) t_prev) t_prev_prev in
-      let current_coef = Option.unopt (List.head_opt coef) in
-      let rest_coef = Option.unopt (List.tail_opt coef) in
+      let current_coef = Option.value_with_error "Missing chebychev coef" (List.head coef) in
+      let rest_coef = Option.value_with_error "Missing chebychev coef" (List.tail coef) in
       let new_acc = Rational.add acc (Rational.mul t_next_u current_coef) in
       compute (i + 1n, new_acc, t_next_u, t_prev, n, rest_coef)
     else acc in

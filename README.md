@@ -1,11 +1,12 @@
 # math-lib-cameligo
 
 This repository contains a math library for [LIGO](https://ligolang.org/). It is
-provided in two flavors (`Float` & `Rational`), and the project is structured as 
-follows 
+provided in two flavors (`Float` & `Rational`), and the project is structured as
+follows
 
 1. [core](./core/README.md): This contains basic math functions
-   like `isqrt`, `power`, `factorial`, `min`, `max`, `log_10`.
+   like `isqrt`, `power`, `factorial`, `min`, `max`, `log_10`. It also provides some
+   useful hack functions like `get_entrypoint_name`, `is_implicit` ("tz1.." ? "KT1..").
 2. [float](./float/README.md): This provides floating point arithmetic
    for LIGO (which is not supported natively by Michelson). It also provides some
    useful trigonometric functions.

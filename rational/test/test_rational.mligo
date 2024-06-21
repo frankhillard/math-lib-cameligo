@@ -4,21 +4,21 @@ let test =
     let a = Rational.new 6 in
     let a = Rational.inverse a in
     let value_resolved : int = Rational.resolve a 3n in
-    let () = assert (value_resolved = 166) in
+    let () = Assert.assert (value_resolved = 166) in
     let a : Rational.t =
       {
        p = 1;
        q = 6
       } in
     let value_resolved : int = Rational.resolve a 3n in
-    let () = assert (value_resolved = 166) in
+    let () = Assert.assert (value_resolved = 166) in
     let a : Rational.t =
       {
        p = -1;
        q = 6
       } in
     let value_resolved : int = Rational.resolve a 3n in
-    let () = assert (value_resolved = -166) in
+    let () = Assert.assert (value_resolved = -166) in
     let a : Rational.t =
       {
        p = 1;
@@ -31,14 +31,14 @@ let test =
       } in
     let value : Rational.t = Rational.add a b in
     let () =
-      assert
+      Assert.assert
         (value
          = {
             p = 5;
             q = 6
            }) in
     let value_resolved : int = Rational.resolve value 3n in
-    let () = assert (value_resolved = 833) in
+    let () = Assert.assert (value_resolved = 833) in
     let a : Rational.t =
       {
        p = 1;
@@ -51,14 +51,14 @@ let test =
       } in
     let value : Rational.t = Rational.sub a b in
     let () =
-      assert
+      Assert.assert
         (value
          = {
             p = -1;
             q = 6
            }) in
     let value_resolved : int = Rational.resolve value 3n in
-    let () = assert (value_resolved = -166) in
+    let () = Assert.assert (value_resolved = -166) in
     let a : Rational.t =
       {
        p = 1;
@@ -71,14 +71,14 @@ let test =
       } in
     let value : Rational.t = Rational.mul a b in
     let () =
-      assert
+      Assert.assert
         (value
          = {
             p = 1;
             q = 6
            }) in
     let value_resolved : int = Rational.resolve value 3n in
-    let () = assert (value_resolved = 166) in
+    let () = Assert.assert (value_resolved = 166) in
     let a : Rational.t =
       {
        p = 1;
@@ -91,13 +91,13 @@ let test =
       } in
     let value : Rational.t = Rational.div a b in
     let () =
-      assert
+      Assert.assert
         (value
          = {
             p = 2;
             q = 3
            }) in
     let value_resolved : int = Rational.resolve value 3n in
-    let () = assert (value_resolved = 666) in
-    Test.log ("Test finished") in
+    let () = Assert.assert (value_resolved = 666) in
+    Test.Next.IO.log ("Test finished") in
   ()

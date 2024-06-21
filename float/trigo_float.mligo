@@ -23,8 +23,8 @@ let sqrt_3 : Float.t = {value=17320508075688772935; pow=-19}
 
 (* computes sinus for an ange between zero and half_pi *)
 let sin(a, n : Float.t * nat) : Float.t = 
-    let _check_angle_positive = assert_with_error (Float.gte a zero) "[Trigo_float.sinus] given angle is out of bound" in
-    let _check_angle_pi_half = assert_with_error (Float.lte a pi_half) "[Trigo_float.sinus] given angle is out of bound" in
+    let _check_angle_positive = Assert.Error.assert (Float.gte a zero) "[Trigo_float.sinus] given angle is out of bound" in
+    let _check_angle_pi_half = Assert.Error.assert (Float.lte a pi_half) "[Trigo_float.sinus] given angle is out of bound" in
     let one = Float.new 1 0 in
     let two = Float.new 2 0 in
     //let u = (x - (a+b)/2.0 )/ (b-a)/2.0
@@ -49,17 +49,18 @@ let sin(a, n : Float.t * nat) : Float.t =
         ]
     in
 
-    let coef_0 = Option.unopt (List.head_opt coef) in
-    let coef_1 = Option.unopt (List.head_opt (Option.unopt (List.tail_opt coef))) in
+    let coef_0 = Option.value_with_error "Missing chebychev coef 0" (List.head coef) in
+    let coef_from_1 = Option.value_with_error "Missing chebychev coef 1" (List.tail coef) in
+    let coef_1 = Option.value_with_error "Missing chebychev coef 1" (List.head coef_from_1) in
     let y0 = Float.add coef_0 (Float.mul coef_1 u) in
     let t0 : Float.t = one in
     let t1 : Float.t = u in
-    let coef_from_2 = Option.unopt (List.tail_opt (Option.unopt (List.tail_opt coef))) in
+    let coef_from_2 = Option.value_with_error "Missing chebychev coef 2" (List.tail coef_from_1) in
     let rec compute (i, acc, t_prev, t_prev_prev, n, coef : nat * Float.t * Float.t * Float.t * nat * chebychev_coef) : Float.t =
         if (i <= n) then
             let t_next_u = Float.sub (Float.mul (Float.mul two u) t_prev) t_prev_prev in
-            let current_coef = Option.unopt (List.head_opt coef) in
-            let rest_coef = Option.unopt (List.tail_opt coef) in
+            let current_coef = Option.value_with_error "Missing chebychev coef" (List.head coef) in
+            let rest_coef = Option.value_with_error "Missing chebychev coef" (List.tail coef) in
             let new_acc = Float.add acc (Float.mul t_next_u current_coef) in
             compute(i + 1n, new_acc, t_next_u, t_prev, n, rest_coef)
         else
